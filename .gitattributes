@@ -1,0 +1,10 @@
+.gitignore      text eol=lf
+.gitattributes  text eol=lf
+
+# C/C++
+*.cpp           text diff=cpp
+*.h             text diff=c
+
+# Misc
+*.md            text eol=lf
+*.txt           text eol=lf
