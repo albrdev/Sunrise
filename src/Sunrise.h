@@ -1,4 +1,4 @@
-/*! \file   Sunrise.hpp
+/*! \file   Sunrise.h
     \author Alexander Brunström
     \date   2020-04-25
 
@@ -22,7 +22,7 @@ typedef struct
     uint8_t reserved1[4];
     uint16_t co2;
     int16_t temp;
-    uint8_t reserved2[3]; // Aligned with together with 'count'
+    uint8_t reserved2[3]; // Aligned with together with 'count'.
     uint8_t count;
     uint16_t cycleTime;
     uint16_t co2_up;
