@@ -36,9 +36,9 @@ void switchMode(measurementmode_t mode)
     while(true)
     {
         measurementmode_t measurementMode;
-        if(!sunrise.ReadMeasurementMode(measurementMode))
+        if(!sunrise.GetMeasurementModeEE(measurementMode))
         {
-            Serial.println("*** ERROR: Could not read measurement mode");
+            Serial.println("*** ERROR: Could not get measurement mode");
             while(true);
         }
 
@@ -48,9 +48,9 @@ void switchMode(measurementmode_t mode)
         }
 
         Serial.println("Attempting to switch measurement mode...");
-        if(!sunrise.WriteMeasurementMode(mode))
+        if(!sunrise.SetMeasurementModeEE(mode))
         {
-            Serial.println("*** ERROR: Could not write measurement mode");
+            Serial.println("*** ERROR: Could not set measurement mode");
             while(true);
         }
 
@@ -83,9 +83,9 @@ void setup(void)
     switchMode(measurementmode_t::MM_SINGLE);
 
     metercontrol_t mc;
-    if(!sunrise.ReadMeterControl(mc))
+    if(!sunrise.GetMeterControlEE(mc))
     {
-        Serial.println("*** ERROR: Could not read meter control");
+        Serial.println("*** ERROR: Could not get meter control");
         while(true);
     }
 

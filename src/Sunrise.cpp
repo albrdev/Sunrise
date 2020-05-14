@@ -191,12 +191,12 @@ uint16_t Sunrise::GetCO2_U(void) const
     return m_Measurement.co2_u;
 }
 
-int16_t Sunrise::GetBarometricAirPressure(void) const
+int16_t Sunrise::GetStateBarometricAirPressure(void) const
 {
     return swapEndian(m_State.bap);
 }
 
-void Sunrise::SetBarometricAirPressure(int16_t value)
+void Sunrise::SetStateBarometricAirPressure(int16_t value)
 {
     if(value < BAROMETRIC_AIR_PRESSURE_MIN || value > BAROMETRIC_AIR_PRESSURE_MAX)
     {
@@ -206,7 +206,7 @@ void Sunrise::SetBarometricAirPressure(int16_t value)
     m_State.bap = swapEndian(value);
 }
 
-bool Sunrise::ReadBarometricAirPressure(int16_t& result) const
+bool Sunrise::GetBarometricAirPressure(int16_t& result) const
 {
     const uint8_t reg = REG_BAROMETRIC_AIR_PRESSURE_VALUE_MSB;
     bool status = BeginCommand() && I2CWrite(m_Address, &reg, sizeof(reg)) == wirestatus_t::WS_ACK && I2CRead(m_Address, &result, sizeof(result)) == sizeof(result);
@@ -218,7 +218,7 @@ bool Sunrise::ReadBarometricAirPressure(int16_t& result) const
     return status;
 }
 
-bool Sunrise::WriteBarometricAirPressure(int16_t value) const
+bool Sunrise::SetBarometricAirPressure(int16_t value) const
 {
     if(value < BAROMETRIC_AIR_PRESSURE_MIN || value > BAROMETRIC_AIR_PRESSURE_MAX)
     {
@@ -236,7 +236,7 @@ bool Sunrise::WriteBarometricAirPressure(int16_t value) const
 bool Sunrise::StartSingleMeasurement(void) const
 {
     measurementmode_t mode;
-    if(!ReadMeasurementMode(mode))
+    if(!GetMeasurementModeEE(mode))
     {
         return false;
     }
@@ -295,7 +295,7 @@ bool Sunrise::ReadMeasurement(bool saveState)
 bool Sunrise::ReadMeasurement(void)
 {
     measurementmode_t mode;
-    if(!ReadMeasurementMode(mode))
+    if(!GetMeasurementModeEE(mode))
     {
         Serial.println("bla0");
         return false;
@@ -401,7 +401,7 @@ bool Sunrise::SetCO2ValueOverride(uint16_t value) const
     return WriteRegister2(REG_CO2_VALUE_OVERRIDE_MSB, value, DELAY_SRAM);
 }
 
-bool Sunrise::ReadMeasurementMode(measurementmode_t& result) const
+bool Sunrise::GetMeasurementModeEE(measurementmode_t& result) const
 {
     uint8_t tmpResult;
     bool status = ReadRegister1(REG_MEASUREMENT_MODE, tmpResult);
@@ -413,17 +413,17 @@ bool Sunrise::ReadMeasurementMode(measurementmode_t& result) const
     return status;
 }
 
-bool Sunrise::WriteMeasurementMode(measurementmode_t value) const
+bool Sunrise::SetMeasurementModeEE(measurementmode_t value) const
 {
     return WriteRegister1(REG_MEASUREMENT_MODE, value, DELAY_EEPROM);
 }
 
-bool Sunrise::ReadMeasurementPeriod(uint16_t& result) const
+bool Sunrise::GetMeasurementPeriodEE(uint16_t& result) const
 {
     return ReadRegister2(REG_MEASUREMENT_PERIOD_MSB, result);
 }
 
-bool Sunrise::WriteMeasurementPeriod(uint16_t value) const
+bool Sunrise::SetMeasurementPeriodEE(uint16_t value) const
 {
     if(value < MEASUREMENT_PERIOD_MIN || value > MEASUREMENT_PERIOD_MAX)
     {
@@ -433,12 +433,12 @@ bool Sunrise::WriteMeasurementPeriod(uint16_t value) const
     return WriteRegister2(REG_MEASUREMENT_PERIOD_MSB, value, DELAY_EEPROM);
 }
 
-bool Sunrise::ReadNumberOfSamples(uint16_t& result) const
+bool Sunrise::GetNumberOfSamplesEE(uint16_t& result) const
 {
     return ReadRegister2(REG_NUMBER_OF_SAMPLES_MSB, result);
 }
 
-bool Sunrise::WriteNumberOfSamples(uint16_t value) const
+bool Sunrise::SetNumberOfSamplesEE(uint16_t value) const
 {
     if(value < NUMBER_OF_SAMPLES_MIN || value > NUMBER_OF_SAMPLES_MAX)
     {
@@ -448,12 +448,12 @@ bool Sunrise::WriteNumberOfSamples(uint16_t value) const
     return WriteRegister2(REG_NUMBER_OF_SAMPLES_MSB, value, DELAY_EEPROM);
 }
 
-bool Sunrise::ReadABCPeriod(uint16_t& result) const
+bool Sunrise::GetABCPeriodEE(uint16_t& result) const
 {
     return ReadRegister2(REG_ABC_PERIOD_MSB, result);
 }
 
-bool Sunrise::WriteABCPeriod(uint16_t value) const
+bool Sunrise::SetABCPeriodEE(uint16_t value) const
 {
     if(value < ABC_PERIOD_MIN || value > ABC_PERIOD_MAX)
     {
@@ -463,35 +463,35 @@ bool Sunrise::WriteABCPeriod(uint16_t value) const
     return WriteRegister2(REG_ABC_PERIOD_MSB, value, DELAY_EEPROM);
 }
 
-bool Sunrise::ReadABCTarget(uint16_t& result) const
+bool Sunrise::GetABCTargetEE(uint16_t& result) const
 {
     return ReadRegister2(REG_ABC_TARGET_MSB, result);
 }
 
-bool Sunrise::WriteABCTarget(uint16_t value) const
+bool Sunrise::SetABCTargetEE(uint16_t value) const
 {
     return WriteRegister2(REG_ABC_TARGET_MSB, value, DELAY_EEPROM);
 }
 
-bool Sunrise::ReadStaticIIRFilterParameter(uint8_t& result) const
+bool Sunrise::GetStaticIIRFilterParameterEE(uint8_t& result) const
 {
     return ReadRegister1(REG_STATIC_IIR_FILTER_PARAMETER, result);
 }
 
-bool Sunrise::WriteStaticIIRFilterParameter(uint8_t value) const
+bool Sunrise::SetStaticIIRFilterParameterEE(uint8_t value) const
 {
     return WriteRegister1(REG_STATIC_IIR_FILTER_PARAMETER, value, DELAY_EEPROM);
 }
 
-bool Sunrise::ReadMeterControlRaw(uint8_t& result) const
+bool Sunrise::GetMeterControlRawEE(uint8_t& result) const
 {
     return ReadRegister1(REG_METER_CONTROL, result);
 }
 
-bool Sunrise::ReadMeterControl(metercontrol_t& result) const
+bool Sunrise::GetMeterControlEE(metercontrol_t& result) const
 {
     uint8_t tmpResult;
-    bool status = ReadMeterControlRaw(tmpResult);
+    bool status = GetMeterControlRawEE(tmpResult);
     if(status)
     {
 
@@ -505,21 +505,21 @@ bool Sunrise::ReadMeterControl(metercontrol_t& result) const
     return status;
 }
 
-bool Sunrise::WriteMeterControlRaw(uint8_t value) const
+bool Sunrise::SetMeterControlRawEE(uint8_t value) const
 {
     return WriteRegister1(REG_METER_CONTROL, value, DELAY_EEPROM);
 }
 
-bool Sunrise::WriteMeterControl(const metercontrol_t& value) const
+bool Sunrise::SetMeterControlEE(const metercontrol_t& value) const
 {
     uint8_t tmpValue;
-    if(!ReadMeterControlRaw(tmpValue))
+    if(!GetMeterControlRawEE(tmpValue))
     {
         return false;
     }
 
     tmpValue = (tmpValue & 0xE0) | (value.nrdy << metercontrolindex_t::MCI_NRDY) | (value.abc << metercontrolindex_t::MCI_ABC) | (value.static_iir << metercontrolindex_t::MCI_STATIC_IIR) | (value.dynamic_iir << metercontrolindex_t::MCI_DYNAMIC_IIR) | (value.pressure_compensation << metercontrolindex_t::MCI_PRESSURE_COMPENSATION);
-    return WriteMeterControlRaw(tmpValue);
+    return SetMeterControlRawEE(tmpValue);
 }
 
 bool Sunrise::Restart(void) const

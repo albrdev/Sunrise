@@ -17,7 +17,7 @@ void printStaticInfo(void)
     // Firmware revision raw
     if(!sunrise.GetFirmwareRevisionRaw(firmwareRevisionRaw))
     {
-        Serial.println("Error: Could not read firmware revision raw");
+        Serial.println("Error: Could not get firmware revision raw");
         while(true);
     }
     Serial.print("Firmware revision raw:  "); Serial.println(firmwareRevisionRaw);
@@ -25,7 +25,7 @@ void printStaticInfo(void)
     // Firmware revision
     if(!sunrise.GetFirmwareRevision(firmwareRevisionMain, firmwareRevisionSub))
     {
-        Serial.println("Error: Could not read raw firmware revision");
+        Serial.println("Error: Could not get raw firmware revision");
         while(true);
     }
     Serial.print("Firmware revision:      "); Serial.print(firmwareRevisionMain); Serial.print("."); Serial.println(firmwareRevisionSub);
@@ -33,7 +33,7 @@ void printStaticInfo(void)
     // Sensor ID
     if(!sunrise.GetSensorID(sensorID))
     {
-        Serial.println("Error: Could not read sensor ID");
+        Serial.println("Error: Could not get sensor ID");
         while(true);
     }
     Serial.print("Sensor ID:              "); Serial.println(sensorID);
@@ -47,17 +47,17 @@ void printMeterControl(void)
 
     Serial.println("[Meter control]");
     // Meter control raw
-    if(!sunrise.ReadMeterControlRaw(meterControlRaw))
+    if(!sunrise.GetMeterControlRawEE(meterControlRaw))
     {
-        Serial.println("Error: Could not read meter control raw");
+        Serial.println("Error: Could not get meter control raw");
         while(true);
     }
     Serial.print("Raw:                    "); Serial.println(meterControlRaw, BIN);
 
     // Meter control
-    if(!sunrise.ReadMeterControl(meterControl))
+    if(!sunrise.GetMeterControlEE(meterControl))
     {
-        Serial.println("Error: Could not read meter control");
+        Serial.println("Error: Could not get meter control");
         while(true);
     }
 
@@ -80,49 +80,49 @@ void printMeasurementSettings(void)
 
     Serial.println("[Measurement settings]");
     // Measurement mode
-    if(!sunrise.ReadMeasurementMode(measurementMode))
+    if(!sunrise.GetMeasurementModeEE(measurementMode))
     {
-        Serial.println("Error: Could not read measurement mode");
+        Serial.println("Error: Could not get measurement mode");
         while(true);
     }
     Serial.print("Measurement mode:             "); Serial.println(measurementMode == measurementmode_t::MM_CONTINUOUS ? "Continuous" : "Single");
 
     // Measurement period
-    if(!sunrise.ReadMeasurementPeriod(measurementPeriod))
+    if(!sunrise.GetMeasurementPeriodEE(measurementPeriod))
     {
-        Serial.println("*** ERROR: Could not read measurement period");
+        Serial.println("*** ERROR: Could not get measurement period");
         while(true);
     }
     Serial.print("Measurement period:           "); Serial.print(measurementPeriod); Serial.println("s");
 
     // Number of samples
-    if(!sunrise.ReadNumberOfSamples(numberOfSamples))
+    if(!sunrise.GetNumberOfSamplesEE(numberOfSamples))
     {
-        Serial.println("*** ERROR: Could not read number of samples");
+        Serial.println("*** ERROR: Could not get number of samples");
         while(true);
     }
     Serial.print("Number of samples:            "); Serial.println(numberOfSamples);
 
     // ABC period
-    if(!sunrise.ReadABCPeriod(abcPeriod))
+    if(!sunrise.GetABCPeriodEE(abcPeriod))
     {
-        Serial.println("Error: Could not read ABC period");
+        Serial.println("Error: Could not get ABC period");
         while(true);
     }
     Serial.print("ABC period:                   "); Serial.print(abcPeriod); Serial.println("h");
 
     // ABC target
-    if(!sunrise.ReadABCTarget(abcTarget))
+    if(!sunrise.GetABCTargetEE(abcTarget))
     {
-        Serial.println("Error: Could not read ABC target");
+        Serial.println("Error: Could not get ABC target");
         while(true);
     }
     Serial.print("ABC target:                   "); Serial.print(abcTarget); Serial.println("ppm");
 
     // Static IIR filter parameter
-    if(!sunrise.ReadStaticIIRFilterParameter(staticIIRFilterParameter))
+    if(!sunrise.GetStaticIIRFilterParameterEE(staticIIRFilterParameter))
     {
-        Serial.println("Error: Could not read static IIR fitler parameter");
+        Serial.println("Error: Could not get static IIR fitler parameter");
         while(true);
     }
     Serial.print("Static IIR fitler parameter:  "); Serial.println(staticIIRFilterParameter);

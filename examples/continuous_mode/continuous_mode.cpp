@@ -20,9 +20,9 @@ void switchMode(measurementmode_t mode)
     while(true)
     {
         measurementmode_t measurementMode;
-        if(!sunrise.ReadMeasurementMode(measurementMode))
+        if(!sunrise.GetMeasurementModeEE(measurementMode))
         {
-            Serial.println("*** ERROR: Could not read measurement mode");
+            Serial.println("*** ERROR: Could not get measurement mode");
             while(true);
         }
 
@@ -32,9 +32,9 @@ void switchMode(measurementmode_t mode)
         }
 
         Serial.println("Attempting to switch measurement mode...");
-        if(!sunrise.WriteMeasurementMode(mode))
+        if(!sunrise.SetMeasurementModeEE(mode))
         {
-            Serial.println("*** ERROR: Could not write measurement mode");
+            Serial.println("*** ERROR: Could not set measurement mode");
             while(true);
         }
 
@@ -69,18 +69,18 @@ void setup(void)
     switchMode(measurementmode_t::MM_CONTINUOUS);
 
     uint16_t mp;
-    if(!sunrise.ReadMeasurementPeriod(mp))
+    if(!sunrise.GetMeasurementPeriodEE(mp))
     {
-        Serial.println("*** ERROR: Could not read measurement period");
+        Serial.println("*** ERROR: Could not get measurement period");
         while(true);
     }
     Serial.print("Measurement period:  "); Serial.println(mp);
     measurementInterval = mp * 1000UL;
 
     uint16_t nos;
-    if(!sunrise.ReadNumberOfSamples(nos))
+    if(!sunrise.GetNumberOfSamplesEE(nos))
     {
-        Serial.println("*** ERROR: Could not read number of samples");
+        Serial.println("*** ERROR: Could not get number of samples");
         while(true);
     }
     Serial.print("Number of samples:   "); Serial.println(nos);

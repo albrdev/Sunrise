@@ -146,10 +146,10 @@ public:
     uint16_t GetCO2_UP(void) const;
     uint16_t GetCO2_F(void) const;
     uint16_t GetCO2_U(void) const;
-    int16_t GetBarometricAirPressure(void) const;
-    void SetBarometricAirPressure(int16_t value);
-    bool ReadBarometricAirPressure(int16_t& result) const;
-    bool WriteBarometricAirPressure(int16_t value) const;
+    int16_t GetStateBarometricAirPressure(void) const;
+    void SetStateBarometricAirPressure(int16_t value);
+    bool GetBarometricAirPressure(int16_t& result) const;
+    bool SetBarometricAirPressure(int16_t value) const;
 
     bool StartSingleMeasurement(void) const;
     bool ReadMeasurement(bool saveState);
@@ -170,24 +170,24 @@ public:
     bool GetCO2ValueOverride(uint16_t& result) const;
     bool SetCO2ValueOverride(uint16_t value) const;
 
-    bool ReadMeasurementMode(measurementmode_t& result) const;
-    bool WriteMeasurementMode(measurementmode_t value) const;
-    bool ReadMeasurementPeriod(uint16_t& result) const;
-    bool WriteMeasurementPeriod(uint16_t value) const;
-    bool ReadNumberOfSamples(uint16_t& result) const;
-    bool WriteNumberOfSamples(uint16_t value) const;
-    bool ReadABCPeriod(uint16_t& result) const;
-    bool WriteABCPeriod(uint16_t value) const;
+    bool GetMeasurementModeEE(measurementmode_t& result) const;
+    bool SetMeasurementModeEE(measurementmode_t value) const;
+    bool GetMeasurementPeriodEE(uint16_t& result) const;
+    bool SetMeasurementPeriodEE(uint16_t value) const;
+    bool GetNumberOfSamplesEE(uint16_t& result) const;
+    bool SetNumberOfSamplesEE(uint16_t value) const;
+    bool GetABCPeriodEE(uint16_t& result) const;
+    bool SetABCPeriodEE(uint16_t value) const;
 
-    bool ReadABCTarget(uint16_t& result) const;
-    bool WriteABCTarget(uint16_t value) const;
-    bool ReadStaticIIRFilterParameter(uint8_t& result) const;
-    bool WriteStaticIIRFilterParameter(const uint8_t value) const;
+    bool GetABCTargetEE(uint16_t& result) const;
+    bool SetABCTargetEE(uint16_t value) const;
+    bool GetStaticIIRFilterParameterEE(uint8_t& result) const;
+    bool SetStaticIIRFilterParameterEE(const uint8_t value) const;
 
-    bool ReadMeterControlRaw(uint8_t& result) const;
-    bool ReadMeterControl(metercontrol_t& result) const;
-    bool WriteMeterControlRaw(uint8_t value) const;
-    bool WriteMeterControl(const metercontrol_t& value) const;
+    bool GetMeterControlRawEE(uint8_t& result) const;
+    bool GetMeterControlEE(metercontrol_t& result) const;
+    bool SetMeterControlRawEE(uint8_t value) const;
+    bool SetMeterControlEE(const metercontrol_t& value) const;
 
     bool Restart(void) const;
     bool HardRestart(void) const;
