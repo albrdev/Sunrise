@@ -68,6 +68,15 @@ static uint8_t I2CWrite(int addr, const void* data, size_t size, bool sendStop =
     return result;
 }
 
+bool Sunrise::BeginCommand(void) const
+{
+    Wire.beginTransmission(m_Address);
+    delay(1UL);
+    bool status = (Wire.endTransmission(true) == wirestatus_t::WS_NACK_ADDRESS);
+    delay(DELAY_SRAM);
+    return status;
+}
+
 bool Sunrise::ReadRegister1(uint8_t reg, uint8_t& result) const
 {
     return BeginCommand() && I2CWrite(m_Address, &reg, sizeof(reg)) == wirestatus_t::WS_ACK && I2CRead(m_Address, &result, sizeof(result)) == sizeof(result);
@@ -549,33 +558,7 @@ bool Sunrise::SetMeterControlEE(const metercontrol_t& value) const
     return SetMeterControlRawEE(tmpValue);
 }
 
-bool Sunrise::Restart(void) const
-{
-    if(!WriteRegister1(REG_SCR, 0xFF, DELAY_SRAM))
-    {
-        return false;
-    }
-
-    //HardRestart();
-    delay(DELAY_WAKEUP);
-    return true;
-}
-
-bool Sunrise::HardRestart(void) const
-{
-    if(m_PinEN == SUNRISE_INVALID_PIN)
-    {
-        return false;
-    }
-
-    Sleep();
-    delay(1UL);
-    Awake();
-
-    return true;
-}
-
-bool Sunrise::WriteAddress(uint8_t value, bool restart)
+bool Sunrise::ChangeAddress(uint8_t value, bool restart)
 {
     if(value == m_Address)
     {
@@ -632,17 +615,6 @@ bool Sunrise::GetSensorID(uint32_t& result) const
     return status;
 }
 
-bool Sunrise::Ping(void) const
-{
-    uint8_t tmpResult;
-    if(!ReadRegister1(REG_MB_I2C_ADDRESS, tmpResult))
-    {
-        return false;
-    }
-
-    return tmpResult == m_Address;
-}
-
 void Sunrise::Awake(void) const
 {
     if(m_PinEN == SUNRISE_INVALID_PIN)
@@ -664,13 +636,41 @@ void Sunrise::Sleep(void) const
     digitalWrite(m_PinEN, LOW);
 }
 
-bool Sunrise::BeginCommand(void) const
+bool Sunrise::Restart(void) const
 {
-    Wire.beginTransmission(m_Address);
+    if(!WriteRegister1(REG_SCR, 0xFF, DELAY_SRAM))
+    {
+        return false;
+    }
+
+    //HardRestart();
+    delay(DELAY_WAKEUP);
+    return true;
+}
+
+bool Sunrise::HardRestart(void) const
+{
+    if(m_PinEN == SUNRISE_INVALID_PIN)
+    {
+        return false;
+    }
+
+    Sleep();
     delay(1UL);
-    bool status = (Wire.endTransmission(true) == wirestatus_t::WS_NACK_ADDRESS);
-    delay(DELAY_SRAM);
-    return status;
+    Awake();
+
+    return true;
+}
+
+bool Sunrise::Ping(void) const
+{
+    uint8_t tmpResult;
+    if(!ReadRegister1(REG_MB_I2C_ADDRESS, tmpResult))
+    {
+        return false;
+    }
+
+    return tmpResult == m_Address;
 }
 
 bool Sunrise::Begin(bool readInitialState)

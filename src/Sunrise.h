@@ -1,12 +1,12 @@
-/** @file   Sunrise.h
-    @author Alexander Brunström
-    @date   2020-04-25
+/*! \file   Sunrise.h
+    \author Alexander Brunström
+    \date   2020-04-25
 
     Contains main class, structs and enum types associated with the Sunrise CO2 sensor.
  */
 
-#ifndef __SUNRISE_HPP__
-#define __SUNRISE_HPP__
+#ifndef __SUNRISE_H__
+#define __SUNRISE_H__
 
 #include <stdint.h>
 #include <Arduino.h>
@@ -123,196 +123,576 @@ private:
         0U                                  // Barometric air pressure
     };
 
-    /** Initiates a I2C command to the sensor.
-        @fn BeginCommand()
-        @return True on success, false otherwise.
+#ifndef __REGION__REGISTER_CONTROL__
+    /*! Initiates a I2C command to the sensor.
+        \fn     BeginCommand()
+        \return True on success, false on failure.
     */
     bool BeginCommand(void) const;
 
-    /** Reads a 1-byte register value from the sensor.
-        @fn ReadRegister2()
-        @param[in]  reg     The register address.
-        @param[out] result  The register value, in host endian. On failure, this parameter is left unchanged.
-        @return             True on success, false otherwise.
+    /*! Reads a 1-byte register value from the sensor.
+        \fn                 ReadRegister2()
+        \param[in]  reg     The register address.
+        \param[out] result  The register value, in host endian. On failure, this parameter is left unchanged.
+        \return             True on success, false on failure.
     */
     bool ReadRegister1(uint8_t reg, uint8_t& result) const;
 
-    /** Writes a 1-byte register value to the sensor.
-        @fn WriteRegister1()
-        @param[in]  reg     The register address.
-        @param[in]  value   The register value, in host endian.
-        @param[in]  delay   The amount of time in milliseconds to wait for the sensor to finish writing.
-        @return             True on success, false otherwise.
+    /*! Writes a 1-byte register value to the sensor.
+        \fn                 WriteRegister1()
+        \param[in]  reg     The register address.
+        \param[in]  value   The register value, in host endian.
+        \param[in]  delay   The amount of time in milliseconds to wait for the sensor to finish writing.
+        \return             True on success, false on failure.
     */
     bool WriteRegister1(uint8_t reg, uint8_t value, unsigned long int delay) const;
 
-    /** Reads a 2-byte register value from the sensor, taking endian into account.
-        @fn ReadRegister2()
-        @param[in]  reg     The register address.
-        @param[out] result  The register value, in host endian. On failure, this parameter is left unchanged.
-        @return             True on success, false otherwise.
+    /*! Reads a 2-byte register value from the sensor, taking endian into account.
+        \fn                 ReadRegister2()
+        \param[in]  reg     The register address.
+        \param[out] result  The register value, in host endian. On failure, this parameter is left unchanged.
+        \return             True on success, false on failure.
     */
     bool ReadRegister2(uint8_t reg, uint16_t& result) const;
 
-    /** Writes a 2-byte register value to the sensor, taking endian into account.
-        @fn WriteRegister2()
-        @param[in]  reg     The register address.
-        @param[in]  value   The register value, in host endian.
-        @param[in]  delay   The amount of time in milliseconds to wait for the sensor to finish writing.
-        @return             True on success, false otherwise.
+    /*! Writes a 2-byte register value to the sensor, taking endian into account.
+        \fn                 WriteRegister2()
+        \param[in]  reg     The register address.
+        \param[in]  value   The register value, in host endian.
+        \param[in]  delay   The amount of time in milliseconds to wait for the sensor to finish writing.
+        \return             True on success, false on failure.
     */
     bool WriteRegister2(uint8_t reg, uint16_t value, unsigned long int delay) const;
+#endif  // __REGION__REGISTER_CONTROL__
 
 public:
-    /** Querying a device to check if it responds according to the sensor.
-        @fn PingAddress()
-        @param[in]  address The device address.
-        @return             True on success (the device is most likely a Sunrise sensor), false otherwise.
+    /*! Querying a device to check if it responds according to the sensor.
+        \fn                 PingAddress()
+        \param[in]  address The device address.
+        \return             True on success (the device is most likely a Sunrise sensor), false otherwise.
     */
     static bool PingAddress(uint8_t address);
 
-    /** Checks if the device's error status has been set.
-        @fn operator bool()
-        @return True if the error status has NOT been set, false if an error has occured.
+    /*! Checks if the device's error status has been set.
+        \fn     operator bool()
+        \return True if the error status has NOT been set, false if an error has occured.
     */
     operator bool(void) const;
 
-    /** Checks if a specific error has been set.
-        @fn GetErrorStatus()
-        @param[in]  value   The code for the specific error to check.
-        @return             True if the specified error has occured, false otherwise.
+#ifndef __REGION__MEASUREMENT_VALUES__
+    /*! Checks if a specific error has been set.
+        \fn                 GetErrorStatus()
+        \param[in]  value   The code for the specific error to check.
+        \return             True if the specified error has occured, false otherwise.
     */
     bool GetErrorStatus(errorstatus_t value) const;
 
-    /** Gets the full error status field.
-        @fn GetErrorStatusRaw()
-        @return The error status.
+    /*! Gets the full error status field.
+        \fn     GetErrorStatusRaw()
+        \return The error status.
     */
     uint16_t GetErrorStatusRaw(void) const;
 
-    /** Clears the device's error status.
-        @fn ClearErrorStatus()
-        @return True on success, false otherwise.
+    /*! Clears the device's error status.
+        \fn     ClearErrorStatus()
+        \return True on success, false on failure.
     */
     bool ClearErrorStatus(void);
 
-    /** Gets the CO2 value previously retrieved by ReadMeasurement().
-        @fn GetCO2()
-        @return The CO2 value in ppm.
+    /*! Gets the CO2 value previously retrieved by ReadMeasurement().
+        \fn     GetCO2()
+        \return The CO2 value in ppm.
     */
     uint16_t GetCO2(void) const;
 
-    /** Gets the temperature value previously retrieved by ReadMeasurement().
-        @fn GetTemperature()
-        @return The temperature in centigrades (Celsius).
+    /*! Gets the temperature value previously retrieved by ReadMeasurement().
+        \fn     GetTemperature()
+        \return The temperature in centigrades (Celsius).
     */
     float GetTemperature(void) const;
 
-    /** Gets the temperature value previously retrieved by ReadMeasurement().
+    /*! Gets the temperature value previously retrieved by ReadMeasurement().
         This value is the actual temperature * 100.
-        @fn GetTemperatureRaw()
-        @return The raw temperature in centigrades (Celsius).
+        \fn     GetTemperatureRaw()
+        \return The raw temperature in centigrades (Celsius).
     */
     int16_t GetTemperatureRaw(void) const;
 
-    /** Gets the measurement count previously retrieved by ReadMeasurement().
+    /*! Gets the measurement count previously retrieved by ReadMeasurement().
         This value gets reset when the sensor is powered down.
-        @fn GetMeasurementCount()
-        @return The measurement count.
+        \fn     GetMeasurementCount()
+        \return The measurement count.
     */
     uint8_t GetMeasurementCount(void) const;
 
-    /** Gets the measurement cycle time previously retrieved by ReadMeasurement().
+    /*! Gets the measurement cycle time previously retrieved by ReadMeasurement().
         This value show the number of cycles passed (incremented every 2 seconds) in the current measurement.
         e.g. a value of 3 means 3 * 2 = 6 total seconds passed.
-        @fn GetMeasurementCycleTime()
-        @return The measurement cycle time.
+        \fn     GetMeasurementCycleTime()
+        \return The measurement cycle time.
     */
     uint16_t GetMeasurementCycleTime(void) const;
 
-    /** Gets the CO2 (unfiltered, pressure compensated) value previously retrieved by ReadMeasurement().
-        @fn GetCO2_UP()
-        @return The CO2 value in ppm.
+    /*! Gets the CO2 (unfiltered, pressure compensated) value previously retrieved by ReadMeasurement().
+        \fn     GetCO2_UP()
+        \return The CO2 value in ppm.
     */
     uint16_t GetCO2_UP(void) const;
 
-    /** Gets the CO2 (filtered) value previously retrieved by ReadMeasurement().
-        @fn GetCO2_F()
-        @return The CO2 value in ppm.
+    /*! Gets the CO2 (filtered) value previously retrieved by ReadMeasurement().
+        \fn     GetCO2_F()
+        \return The CO2 value in ppm.
     */
     uint16_t GetCO2_F(void) const;
 
-    /** Gets the CO2 value previously retrieved by ReadMeasurement().
-        @fn GetCO2_U()
-        @return The CO2 value in ppm.
+    /*! Gets the CO2 (unfiltered) value previously retrieved by ReadMeasurement().
+        \fn     GetCO2_U()
+        \return The CO2 value in ppm.
     */
     uint16_t GetCO2_U(void) const;
+#endif  // __REGION__REGISTER_VALUES__
 
+#ifndef __REGION__BAROMETRIC_PRESSURE__
+    /*! Gets the barometric air pressure cached in the internal state.
+        See SetStateBarometricAirPressure().
+        \fn     GetStateBarometricAirPressure()
+        \return The barometric air pressure in kPa.
+    */
     float GetStateBarometricAirPressure(void) const;
+
+    /*! Sets the barometric air pressure cached in the internal state.
+        This value is automatically written (along with state) to the sensor at the next call to StartSingleMeasurement(), when in single measurement mode.
+        \fn                 SetStateBarometricAirPressure()
+        \param[in]  value   The barometric air pressure in kPa.
+    */
     void SetStateBarometricAirPressure(float value);
+
+    /*! Gets the raw barometric air pressure cached in the internal state.
+        See SetStateBarometricAirPressureRaw().
+        \fn     GetStateBarometricAirPressureRaw()
+        \return The barometric air pressure in hPa.
+    */
     int16_t GetStateBarometricAirPressureRaw(void) const;
+
+    /*! Sets the raw barometric air pressure cached in the internal state.
+        This value is automatically written (along with state) to the sensor at the next call to StartSingleMeasurement() when in single measurement mode.
+        \fn                 SetStateBarometricAirPressureRaw()
+        \param[in]  value   The barometric air pressure in hPa.
+    */
     void SetStateBarometricAirPressureRaw(int16_t value);
+
+    /*! Gets the barometric air pressure directly from the sensor's register.
+        See SetBarometricAirPressure().
+        \fn                 GetBarometricAirPressure()
+        \param[out] result  The barometric air pressure in kPa.
+        \return             True on success, false on failure.
+    */
     bool GetBarometricAirPressure(float& result) const;
+
+    /*! Sets the barometric air pressure directly to the sensor's register.
+        Can be used when the sensor is in continuous measurement mode, since the internal state is then not used.
+        \fn                 SetBarometricAirPressure()
+        \param[in]  value   The barometric air pressure in kPa.
+        \return             True on success, false on failure.
+    */
     bool SetBarometricAirPressure(float value) const;
+
+    /*! Gets the raw barometric air pressure directly from the sensor's register.
+        See SetBarometricAirPressureRaw().
+        \fn                 GetBarometricAirPressureRaw()
+        \param[out] result  The barometric air pressure in hPa.
+        \return             True on success, false on failure.
+    */
     bool GetBarometricAirPressureRaw(int16_t& result) const;
+
+    /*! Sets the raw barometric air pressure directly to the sensor's register.
+        Can be used when the sensor is in continuous measurement mode, since the internal state is then not used.
+        \fn                 SetBarometricAirPressureRaw()
+        \param[in]  value   The barometric air pressure in hPa.
+        \return             True on success, false on failure.
+    */
     bool SetBarometricAirPressureRaw(int16_t value) const;
+#endif  // __REGION__BAROMETRIC_PRESSURE__
 
+#ifndef __REGION__MEASUREMENT_CONTROL__
+    /*! Restores previous state and signals the sensor to start a new measurement.
+        Has no effect on the sensor if the sensor is in continuous measurement mode.
+        \fn     StartSingleMeasurement()
+        \return True on success, false on failure. Always returns true if the sensor is responsive and in continuous measurement mode.
+    */
     bool StartSingleMeasurement(void) const;
-    bool ReadMeasurement(bool saveState);
-    bool ReadMeasurement(void);
-    bool ReadState(void);
-    const state_t& GetState(void) const;
-    void SetState(const state_t& value);
-    uint16_t GetABCTime(void) const;
-    void SetABCTime(uint16_t value);
 
+    /*! Retrieves CO2 and other valus from the sensor.
+        Optionally also saves the sensor's filtering and calibration state.
+        \fn                     ReadMeasurement()
+        \param[in]  saveState   If true, the sensor's filtering and calibration state is saved.
+        \return                 True on success, false on failure.
+    */
+    bool ReadMeasurement(bool saveState);
+
+    /*! Retrieves CO2 and other valus from the sensor.
+        Also saves filtering and calibration state if the sensor is in single measurement mode, otherwise not.
+        \fn     ReadMeasurement()
+        \return True on success, false on failure.
+    */
+    bool ReadMeasurement(void);
+#endif  // __REGION__MEASUREMENT_CONTROL__
+
+#ifndef __REGION__STATE__
+    /*! Reads and internally saves the sensor's filtering and calibration state.
+        Also saves filtering and calibration state if the sensor is in single measurement mode, otherwise not.
+        \fn     ReadState()
+        \return True on success, false on failure.
+    */
+    bool ReadState(void);
+
+    /*! Gets the cached, previously retrieved filtering and calibration state.
+        \fn     ReadState()
+        \return A reference to the internal state.
+    */
+    const state_t& GetState(void) const;
+
+    /*! Sets the cached filtering and calibration state.
+        The state is automatically written to the sensor at the next call to StartSingleMeasurement(), when in single measurement mode.
+        \fn                 SetState()
+        \param[in]  value   The state.
+    */
+    void SetState(const state_t& value);
+
+    /*! Gets the cached ABC time, i.e. the time passed since the last ABC calibration, in hours.
+        \fn                 GetABCTime()
+        \return             The time since the last ABC calibration.
+    */
+    uint16_t GetABCTime(void) const;
+
+    /*! Sets the ABC time, i.e. the time passed since the last ABC calibration, in hours.
+        The value is automatically written to the sensor at the next call to StartSingleMeasurement(), when in single measurement mode.
+        \fn                 SetABCTime()
+        \param[in]  value   The time since the last ABC calibration.
+    */
+    void SetABCTime(uint16_t value);
+#endif  // __REGION__STATE__
+
+#ifndef __REGION__CALIBRATION_CONTROL__
+    /*! Gets the calibration status.
+        Should be called after a measurement has been performed.
+        The status should be cleared with before the next measurement.
+        \fn                 GetCalibrationStatus()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetCalibrationStatus(uint8_t& result) const;
+
+    /*! Clears the calibration status.
+        \fn                 ClearCalibrationStatus()
+        \return             True on success, false on failure.
+    */
     bool ClearCalibrationStatus(void) const;
+
+    /*! Gets the calibration command.
+        \fn                 GetCalibrationCommand()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetCalibrationCommand(calibration_t& result) const;
+
+    /*! Sets the calibration command.
+        \fn                 SetCalibrationCommand()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetCalibrationCommand(calibration_t value, bool clearStatus = true) const;
+
+    /*! Gets the target calibration value.
+        \fn                 GetCalibrationTarget()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetCalibrationTarget(uint16_t& result) const;
+
+    /*! Sets the target calibration value.
+        \fn                 SetCalibrationTarget()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetCalibrationTarget(uint16_t value) const;
 
+    /*! Gets the CO2 value override.
+        \fn                 GetCO2ValueOverride()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetCO2ValueOverride(uint16_t& result) const;
-    bool SetCO2ValueOverride(uint16_t value) const;
 
+    /*! Sets the CO2 value override.
+        If the value lower than default, both filtered and unfiltered CO2 value will be set to this value after the next measurement.
+        Default value: 32767 (no override).
+        \fn                 SetCO2ValueOverride()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
+    bool SetCO2ValueOverride(uint16_t value) const;
+#endif  // __REGION__CALIBRATION_CONTROL__
+
+#ifndef __REGION__MEASUREMENT_SETTINGS__
+    /*! Gets the measurement mode.
+        \note               This method will read from the sensor's EEPROM and that usually takes a little longer than other methods.
+        \fn                 GetMeasurementModeEE()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetMeasurementModeEE(measurementmode_t& result) const;
+
+    /*! Sets the measurement mode.
+        The sensor has two modes:
+        - Continuous measurement mode (0)
+        - Single measurement mode (1)
+        \attention          This method will write to the sensor's EEPROM and should be used sparsly.
+        \fn                 SetMeasurementModeEE()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetMeasurementModeEE(measurementmode_t value) const;
+
+    /*! Gets the measurement period, i.e. the time between measurements, in seconds.
+        A sensor restart is required to take effect.
+        \note               This method will read from the sensor's EEPROM and that usually takes a little longer than other methods.
+        \fn                 GetMeasurementPeriodEE()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetMeasurementPeriodEE(uint16_t& result) const;
+
+    /*! Sets the measurement period, i.e. the time between measurements, in seconds.
+        Only used by the sensor in continuous measurement mode.
+        Odd numbers will be rounded up to nearest even number.
+        A sensor restart is required to take effect.
+        Allowed values: 2-65534.
+        Default value: 16
+        \attention          This method will write to the sensor's EEPROM and should be used sparsly.
+        \fn                 SetMeasurementPeriodEE()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetMeasurementPeriodEE(uint16_t value) const;
+
+    /*! Gets number of samples per measurement.
+        Each sample takes max. 200 ms to complete.
+        \note               This method will read from the sensor's EEPROM and that usually takes a little longer than other methods.
+        \fn                 GetNumberOfSamplesEE()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetNumberOfSamplesEE(uint16_t& result) const;
+
+    /*! Sets number of samples per measurement.
+        Each sample takes max. 200 ms to complete.
+        Allowed values: 1-1024.
+        Default value: 8.
+        A sensor restart is required to take effect.
+        \attention          This method will write to the sensor's EEPROM and should be used sparsly.
+        \fn                 SetNumberOfSamplesEE()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetNumberOfSamplesEE(uint16_t value) const;
+#endif  // __REGION__MEASUREMENT_SETTINGS__
+
+#ifndef __REGION__FILTERING_SETTINGS__
+    /*! Gets the ABC (Automatic background calibration) period, in hours.
+        \note               This method will read from the sensor's EEPROM and that usually takes a little longer than other methods.
+        \fn                 GetABCPeriodEE()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetABCPeriodEE(uint16_t& result) const;
+
+    /*! Sets the ABC (Automatic background calibration) period, in hours.
+        Allowed values: 1-65534.
+        Default value: 180.
+        \attention          This method will write to the sensor's EEPROM and should be used sparsly.
+        \fn                 SetABCPeriodEE()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetABCPeriodEE(uint16_t value) const;
 
+    /*! Gets the ABC (Automatic background calibration) target, in ppm.
+        \note               This method will read from the sensor's EEPROM and that usually takes a little longer than other methods.
+        \fn                 GetABCTargetEE()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetABCTargetEE(uint16_t& result) const;
+
+    /*! Sets the ABC (Automatic background calibration) target, in ppm.
+        Default value: 400.
+        \attention          This method will write to the sensor's EEPROM and should be used sparsly.
+        \fn                 SetABCTargetEE()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetABCTargetEE(uint16_t value) const;
+
+    /*! Gets the static IIR (Infinite impulse response) filter parameter.
+        \note               This method will read from the sensor's EEPROM and that usually takes a little longer than other methods.
+        \fn                 GetStaticIIRFilterParameterEE()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetStaticIIRFilterParameterEE(uint8_t& result) const;
+
+    /*! Sets the static IIR (Infinite impulse response) filter parameter.
+        A higher value corresponds to a harder filtration.
+        Allowed values: 2-10.
+        Default value: .
+        \attention          This method will write to the sensor's EEPROM and should be used sparsly.
+        \fn                 SetStaticIIRFilterParameterEE()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetStaticIIRFilterParameterEE(const uint8_t value) const;
+#endif  // __REGION__FILTERING_SETTINGS__
 
+#ifndef __REGION__METER_CONTROL__
+    /*! Gets the raw meter control.
+        \note               This method will read from the sensor's EEPROM and that usually takes a little longer than other methods.
+        \fn                 GetMeterControlRawEE()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetMeterControlRawEE(uint8_t& result) const;
-    bool GetMeterControlEE(metercontrol_t& result) const;
+
+    /*! Sets the raw meter control.
+        \attention          This method will write to the sensor's EEPROM and should be used sparsly.
+        \fn                 SetMeterControlRawEE()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetMeterControlRawEE(uint8_t value) const;
+
+    /*! Gets the meter control.
+        \note               This method will read from the sensor's EEPROM and that usually takes a little longer than other methods.
+        \fn                 GetMeterControlEE()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
+    bool GetMeterControlEE(metercontrol_t& result) const;
+
+    /*! Sets the meter control.
+        \attention          This method will write to the sensor's EEPROM and should be used sparsly.
+        \fn                 SetMeterControlEE()
+        \param[in]  value   The value to be set.
+        \return             True on success, false on failure.
+    */
     bool SetMeterControlEE(const metercontrol_t& value) const;
+#endif  // __REGION__METER_CONTROL__
 
-    bool Restart(void) const;
-    bool HardRestart(void) const;
-    bool WriteAddress(uint8_t value, bool restart = true);
+#ifndef __REGION__MISC__
+    /*! Changes the sensor address.
+        A sensor restart is required to take effect.
+        \fn                 ChangeAddress()
+        \param[in]  value   The new address.
+        \param[in]  restart If true, the sensor is also restarted.
+        \return             True on success, false on failure.
+    */
+    bool ChangeAddress(uint8_t value, bool restart = true);
 
+    /*! Gets the raw firmware revision.
+        \fn                 GetFirmwareRevisionRaw()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetFirmwareRevisionRaw(uint16_t& result) const;
+
+    /*! Gets the firmware revision separated into two values, main and sub.
+        \fn                 GetFirmwareRevision()
+        \param[out] main    The main revision. Remains unchanged on failure.
+        \param[out] sub     The sub revision. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetFirmwareRevision(uint8_t& main, uint8_t& sub) const;
+
+    /*! Gets the sensor ID.
+        \fn                 GetSensorID()
+        \param[out] result  The requested value. Remains unchanged on failure.
+        \return             True on success, false on failure.
+    */
     bool GetSensorID(uint32_t& result) const;
+#endif  // __REGION__MISC__
 
-    bool Ping(void) const;
-
+#ifndef __REGION__BASIC_CONTROL__
+    /*! Wakes up the sensor by setting the enable pin high.
+        Intended to be used with single measurement mode.
+        Only has effect if the enable pin has previously been set.
+        \fn Sleep()
+    */
     void Awake(void) const;
+
+    /*! Puts the sensor into sleep mode by setting the enable pin low.
+        Intended to be used with single measurement mode.
+        Only has effect if the enable pin has previously been set.
+        \fn Sleep()
+    */
     void Sleep(void) const;
 
+    /*! Restarts the sensor.
+        Necessary to reload changes to certain settings.
+        \fn     Restart()
+        \return True on success, false on failure.
+    */
+    bool Restart(void) const;
+
+    /*! Restarts the sensor by putting it in sleep mode, then waking it back up.
+        Necessary to reload changes to certain settings.
+        Call this if Restart() fails.
+        Only has effect if enable pin is previously set.
+        \fn     HardRestart()
+        \return True on success, false on failure.
+    */
+    bool HardRestart(void) const;
+
+    /*! Check if the device is active and responds according to Sunrise.
+        \fn     Ping()
+        \return True on success, false on failure.
+    */
+    bool Ping(void) const;
+#endif  // __REGION__BASIC_CONTROL__
+
+#ifndef __REGION__INITIALIZATION__
+    /*! Initiates the sensor.
+        Optionally retrieve the sensor's initial filtering and calibration state.
+        \fn                             Begin()
+        \param[in]  readInitialState    If true, retrieve the initial filtering and calibration state.
+        \return                         True on success, false on failure.
+    */
     bool Begin(bool readInitialState = false);
+
+    /*! Initiates the sensor with the enable pin.
+        Optionally retrieve the sensor's initial filtering and calibration state.
+        \fn                             Begin()
+        \param[in]  pinEN               The enable pin number.
+        \param[in]  readInitialState    If true, retrieve the initial filtering and calibration state.
+        \return                         True on success, false on failure.
+    */
     bool Begin(uint8_t pinEN, bool readInitialState = false);
+
+    /*! Initiates the sensor with the enable pin.
+        Optionally retrieve the sensor's initial filtering and calibration state.
+        \fn                             Begin()
+        \param[in]  pinEN               The enable pin number.
+        \param[in]  readInitialState    If true, retrieve the initial filtering and calibration state.
+        \return                         True on success, false on failure.
+    */
     bool Begin(int pinEN, bool readInitialState = false);
 
+    /*! Class constructor.
+        Optionally sets the sensor's device address, otherwise the default address is used.
+        \fn                 Sunrise()
+        \param[in]  address The sensor I2C address.
+    */
     Sunrise(uint8_t address = SUNRISE_DEFAULT_ADDRESS);
+#endif  // __REGION__INITIALIZATION__
 };
 
-#endif // __SUNRISE_HPP__
+#endif // __SUNRISE_H__
