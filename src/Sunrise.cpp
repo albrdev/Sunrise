@@ -502,6 +502,11 @@ bool Sunrise::GetStaticIIRFilterParameterEE(uint8_t& result) const
 
 bool Sunrise::SetStaticIIRFilterParameterEE(uint8_t value) const
 {
+    if(value < STATIC_IIR_FILTER_PARAMETER_MIN || value > STATIC_IIR_FILTER_PARAMETER_MAX)
+    {
+        return false;
+    }
+
     return WriteRegister1(REG_STATIC_IIR_FILTER_PARAMETER, value, DELAY_EEPROM);
 }
 

@@ -148,23 +148,25 @@
 #define REG_RESERVED_19                         0xDF
 #endif // __REGION__REGISTER_VALUES__
 
-#define MEASUREMENT_PERIOD_MIN      2
-#define MEASUREMENT_PERIOD_MAX      65534
-#define NUMBER_OF_SAMPLES_MIN       1
-#define NUMBER_OF_SAMPLES_MAX       1024
-#define ABC_PERIOD_MIN              1
-#define ABC_PERIOD_MAX              65534
-#define BAROMETRIC_AIR_PRESSURE_MIN 3000
-#define BAROMETRIC_AIR_PRESSURE_MAX 13000
-#define KPA_IN_HPA                  10.0f
+#define MEASUREMENT_PERIOD_MIN          2
+#define MEASUREMENT_PERIOD_MAX          65534
+#define NUMBER_OF_SAMPLES_MIN           1
+#define NUMBER_OF_SAMPLES_MAX           1024
+#define ABC_PERIOD_MIN                  1
+#define ABC_PERIOD_MAX                  65534
+#define STATIC_IIR_FILTER_PARAMETER_MIN 2
+#define STATIC_IIR_FILTER_PARAMETER_MAX 10
+#define BAROMETRIC_AIR_PRESSURE_MIN     3000
+#define BAROMETRIC_AIR_PRESSURE_MAX     13000
+#define KPA_IN_HPA                      10.0f
 
-#define DELAY_WAKEUP                35UL
-#define DELAY_TIMEOUT               15UL
-#define DELAY_SRAM                  1UL
-#define DELAY_EEPROM                25UL
+#define DELAY_WAKEUP                    35UL
+#define DELAY_TIMEOUT                   15UL
+#define DELAY_SRAM                      1UL
+#define DELAY_EEPROM                    25UL
 
-#define I2C_CLOCK_FREQUENCY         100000UL
-#define I2C_ADDRESS_MIN             0x08        // 0-7 are reserved
-#define I2C_ADDRESS_MAX             0x78        // 120-127 are reserved. 127-255 are out of 7-bit address range.
+#define I2C_CLOCK_FREQUENCY             100000UL
+#define I2C_ADDRESS_MIN                 0x08        // 0-7 are reserved
+#define I2C_ADDRESS_MAX                 0x78        // 120-127 are reserved. 127-255 are out of 7-bit address range.
 
 #endif  // __CONSTANTS_H__
