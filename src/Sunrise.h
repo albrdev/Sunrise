@@ -1,6 +1,6 @@
-/*! \file   Sunrise.h
-    \author Alexander Brunström
-    \date   2020-04-25
+/** @file   Sunrise.h
+    @author Alexander Brunström
+    @date   2020-04-25
 
     Contains main class, structs and enum types associated with the Sunrise CO2 sensor.
  */
@@ -123,29 +123,131 @@ private:
         0U                                  // Barometric air pressure
     };
 
+    /** Initiates a I2C command to the sensor.
+        @fn BeginCommand()
+        @return True on success, false otherwise.
+    */
     bool BeginCommand(void) const;
+
+    /** Reads a 1-byte register value from the sensor.
+        @fn ReadRegister2()
+        @param[in]  reg     The register address.
+        @param[out] result  The register value, in host endian. On failure, this parameter is left unchanged.
+        @return             True on success, false otherwise.
+    */
     bool ReadRegister1(uint8_t reg, uint8_t& result) const;
+
+    /** Writes a 1-byte register value to the sensor.
+        @fn WriteRegister1()
+        @param[in]  reg     The register address.
+        @param[in]  value   The register value, in host endian.
+        @param[in]  delay   The amount of time in milliseconds to wait for the sensor to finish writing.
+        @return             True on success, false otherwise.
+    */
     bool WriteRegister1(uint8_t reg, uint8_t value, unsigned long int delay) const;
+
+    /** Reads a 2-byte register value from the sensor, taking endian into account.
+        @fn ReadRegister2()
+        @param[in]  reg     The register address.
+        @param[out] result  The register value, in host endian. On failure, this parameter is left unchanged.
+        @return             True on success, false otherwise.
+    */
     bool ReadRegister2(uint8_t reg, uint16_t& result) const;
+
+    /** Writes a 2-byte register value to the sensor, taking endian into account.
+        @fn WriteRegister2()
+        @param[in]  reg     The register address.
+        @param[in]  value   The register value, in host endian.
+        @param[in]  delay   The amount of time in milliseconds to wait for the sensor to finish writing.
+        @return             True on success, false otherwise.
+    */
     bool WriteRegister2(uint8_t reg, uint16_t value, unsigned long int delay) const;
 
 public:
+    /** Querying a device to check if it responds according to the sensor.
+        @fn PingAddress()
+        @param[in]  address The device address.
+        @return             True on success (the device is most likely a Sunrise sensor), false otherwise.
+    */
     static bool PingAddress(uint8_t address);
 
+    /** Checks if the device's error status has been set.
+        @fn operator bool()
+        @return True if the error status has NOT been set, false if an error has occured.
+    */
     operator bool(void) const;
 
+    /** Checks if a specific error has been set.
+        @fn GetErrorStatus()
+        @param[in]  value   The code for the specific error to check.
+        @return             True if the specified error has occured, false otherwise.
+    */
     bool GetErrorStatus(errorstatus_t value) const;
+
+    /** Gets the full error status field.
+        @fn GetErrorStatusRaw()
+        @return The error status.
+    */
     uint16_t GetErrorStatusRaw(void) const;
+
+    /** Clears the device's error status.
+        @fn ClearErrorStatus()
+        @return True on success, false otherwise.
+    */
     bool ClearErrorStatus(void);
 
+    /** Gets the CO2 value previously retrieved by ReadMeasurement().
+        @fn GetCO2()
+        @return The CO2 value in ppm.
+    */
     uint16_t GetCO2(void) const;
+
+    /** Gets the temperature value previously retrieved by ReadMeasurement().
+        @fn GetTemperature()
+        @return The temperature in centigrades (Celsius).
+    */
     float GetTemperature(void) const;
+
+    /** Gets the temperature value previously retrieved by ReadMeasurement().
+        This value is the actual temperature * 100.
+        @fn GetTemperatureRaw()
+        @return The raw temperature in centigrades (Celsius).
+    */
     int16_t GetTemperatureRaw(void) const;
+
+    /** Gets the measurement count previously retrieved by ReadMeasurement().
+        This value gets reset when the sensor is powered down.
+        @fn GetMeasurementCount()
+        @return The measurement count.
+    */
     uint8_t GetMeasurementCount(void) const;
+
+    /** Gets the measurement cycle time previously retrieved by ReadMeasurement().
+        This value show the number of cycles passed (incremented every 2 seconds) in the current measurement.
+        e.g. a value of 3 means 3 * 2 = 6 total seconds passed.
+        @fn GetMeasurementCycleTime()
+        @return The measurement cycle time.
+    */
     uint16_t GetMeasurementCycleTime(void) const;
+
+    /** Gets the CO2 (unfiltered, pressure compensated) value previously retrieved by ReadMeasurement().
+        @fn GetCO2_UP()
+        @return The CO2 value in ppm.
+    */
     uint16_t GetCO2_UP(void) const;
+
+    /** Gets the CO2 (filtered) value previously retrieved by ReadMeasurement().
+        @fn GetCO2_F()
+        @return The CO2 value in ppm.
+    */
     uint16_t GetCO2_F(void) const;
+
+    /** Gets the CO2 value previously retrieved by ReadMeasurement().
+        @fn GetCO2_U()
+        @return The CO2 value in ppm.
+    */
     uint16_t GetCO2_U(void) const;
+
     int16_t GetStateBarometricAirPressure(void) const;
     void SetStateBarometricAirPressure(int16_t value);
     bool GetBarometricAirPressure(int16_t& result) const;
