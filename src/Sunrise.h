@@ -3,7 +3,7 @@
     \date   2020-04-25
 
     Contains main class, structs and enum types associated with the Sunrise CO2 sensor.
- */
+*/
 
 #ifndef __SUNRISE_H__
 #define __SUNRISE_H__
