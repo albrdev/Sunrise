@@ -191,12 +191,22 @@ uint16_t Sunrise::GetCO2_U(void) const
     return m_Measurement.co2_u;
 }
 
-int16_t Sunrise::GetStateBarometricAirPressure(void) const
+float Sunrise::GetStateBarometricAirPressure(void) const
+{
+    return (float)GetStateBarometricAirPressureRaw() / KPA_IN_HPA;
+}
+
+void Sunrise::SetStateBarometricAirPressure(float value)
+{
+    SetStateBarometricAirPressureRaw((int16_t)(value * KPA_IN_HPA));
+}
+
+int16_t Sunrise::GetStateBarometricAirPressureRaw(void) const
 {
     return swapEndian(m_State.bap);
 }
 
-void Sunrise::SetStateBarometricAirPressure(int16_t value)
+void Sunrise::SetStateBarometricAirPressureRaw(int16_t value)
 {
     if(value < BAROMETRIC_AIR_PRESSURE_MIN || value > BAROMETRIC_AIR_PRESSURE_MAX)
     {
@@ -206,31 +216,43 @@ void Sunrise::SetStateBarometricAirPressure(int16_t value)
     m_State.bap = swapEndian(value);
 }
 
-bool Sunrise::GetBarometricAirPressure(int16_t& result) const
+bool Sunrise::GetBarometricAirPressure(float& result) const
 {
-    const uint8_t reg = REG_BAROMETRIC_AIR_PRESSURE_VALUE_MSB;
-    bool status = BeginCommand() && I2CWrite(m_Address, &reg, sizeof(reg)) == wirestatus_t::WS_ACK && I2CRead(m_Address, &result, sizeof(result)) == sizeof(result);
-    if(status)
+    int16_t tmpResult;
+    if(!GetBarometricAirPressureRaw(tmpResult))
     {
-        result = swapEndian(result);
+        return false;
     }
 
-    return status;
+    result = (float)tmpResult / KPA_IN_HPA;
+    return true;
 }
 
-bool Sunrise::SetBarometricAirPressure(int16_t value) const
+bool Sunrise::SetBarometricAirPressure(float value) const
+{
+    return SetBarometricAirPressureRaw((int16_t)(value * KPA_IN_HPA));
+}
+
+bool Sunrise::GetBarometricAirPressureRaw(int16_t& result) const
+{
+    uint16_t tmpResult;
+    if(!ReadRegister2(REG_BAROMETRIC_AIR_PRESSURE_VALUE_MSB, tmpResult))
+    {
+        return false;
+    }
+
+    result = (int16_t)tmpResult;
+    return true;
+}
+
+bool Sunrise::SetBarometricAirPressureRaw(int16_t value) const
 {
     if(value < BAROMETRIC_AIR_PRESSURE_MIN || value > BAROMETRIC_AIR_PRESSURE_MAX)
     {
         return false;
     }
 
-    const uint8_t reg = REG_BAROMETRIC_AIR_PRESSURE_VALUE_MSB;
-    uint8_t tmpBuffer[sizeof(reg) + sizeof(value)];
-    tmpBuffer[0] = reg;
-    value = swapEndian(value);
-    memcpy(&tmpBuffer[sizeof(reg)], &value, sizeof(value));
-    return BeginCommand() && I2CWrite(m_Address, tmpBuffer, sizeof(tmpBuffer), true, DELAY_SRAM * 2UL) == wirestatus_t::WS_ACK;
+    return WriteRegister2(REG_BAROMETRIC_AIR_PRESSURE_VALUE_MSB, (uint16_t)value, DELAY_SRAM);
 }
 
 bool Sunrise::StartSingleMeasurement(void) const

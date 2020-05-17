@@ -156,6 +156,7 @@
 #define ABC_PERIOD_MAX              65534
 #define BAROMETRIC_AIR_PRESSURE_MIN 3000
 #define BAROMETRIC_AIR_PRESSURE_MAX 13000
+#define KPA_IN_HPA                  10.0f
 
 #define DELAY_WAKEUP                35UL
 #define DELAY_TIMEOUT               15UL

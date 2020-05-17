@@ -248,10 +248,14 @@ public:
     */
     uint16_t GetCO2_U(void) const;
 
-    int16_t GetStateBarometricAirPressure(void) const;
-    void SetStateBarometricAirPressure(int16_t value);
-    bool GetBarometricAirPressure(int16_t& result) const;
-    bool SetBarometricAirPressure(int16_t value) const;
+    float GetStateBarometricAirPressure(void) const;
+    void SetStateBarometricAirPressure(float value);
+    int16_t GetStateBarometricAirPressureRaw(void) const;
+    void SetStateBarometricAirPressureRaw(int16_t value);
+    bool GetBarometricAirPressure(float& result) const;
+    bool SetBarometricAirPressure(float value) const;
+    bool GetBarometricAirPressureRaw(int16_t& result) const;
+    bool SetBarometricAirPressureRaw(int16_t value) const;
 
     bool StartSingleMeasurement(void) const;
     bool ReadMeasurement(bool saveState);
