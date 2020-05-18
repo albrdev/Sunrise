@@ -172,7 +172,7 @@ public:
     */
     static bool PingAddress(uint8_t address);
 
-    /*! Checks if the device's error status has been set.
+    /*! Checks if the sensors's error status has been set.
         \return True if the error status has NOT been set, false if an error has occured.
     */
     operator bool(void) const;
@@ -189,7 +189,7 @@ public:
     */
     uint16_t GetErrorStatusRaw(void) const;
 
-    /*! Clears the device's error status.
+    /*! Clears the sensor's error status.
         \return True on success, false on failure.
     */
     bool ClearErrorStatus(void);
@@ -622,7 +622,7 @@ public:
     bool Begin(int pinEN, bool readInitialState = false);
 
     /*! Class constructor.
-        Optionally sets the sensor's device address, otherwise the default address is used.
+        Optionally specifies the sensor's device address, otherwise the default address is used.
         \param[in]  address The sensor I2C address.
     */
     Sunrise(uint8_t address = SUNRISE_DEFAULT_ADDRESS);
