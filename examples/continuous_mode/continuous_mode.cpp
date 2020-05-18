@@ -38,7 +38,7 @@ void switchMode(measurementmode_t mode)
             while(true);
         }
 
-        if(!sunrise.Restart())
+        if(!sunrise.HardRestart())
         {
             Serial.println("*** ERROR: Failed to restart the device");
             while(true);
