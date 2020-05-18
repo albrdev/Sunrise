@@ -277,6 +277,12 @@ bool Sunrise::StartSingleMeasurement(void) const
         return true;
     }
 
+    uint8_t mc;
+    if(!GetMeterControlRawEE(mc))
+    {
+        return false;
+    }
+
     uint8_t cmd[] = { REGM_START_SINGLE_MEASUREMENT, 0x01 };
     if(!BeginCommand())
     {
@@ -288,7 +294,8 @@ bool Sunrise::StartSingleMeasurement(void) const
         return false;
     }
 
-    return I2CWrite(m_Address, &m_State, sizeof(m_State), true, DELAY_SRAM * 12UL) == wirestatus_t::WS_ACK;
+    size_t size = (mc & (1 << metercontrolindex_t::MCI_PRESSURE_COMPENSATION)) == 0U ? sizeof(m_State) : sizeof(m_State.state);
+    return I2CWrite(m_Address, &m_State, size, true, DELAY_SRAM * 12UL) == wirestatus_t::WS_ACK;
 }
 
 bool Sunrise::ReadMeasurement(bool saveState)
@@ -349,7 +356,7 @@ bool Sunrise::ReadState(void)
         return false;
     }
 
-    if(I2CRead(m_Address, &m_State, sizeof(m_State)) != sizeof(m_State))
+    if(I2CRead(m_Address, &m_State.state, sizeof(m_State.state)) != sizeof(m_State.state))
     {
         return false;
     }
@@ -359,22 +366,22 @@ bool Sunrise::ReadState(void)
 
 const state_t& Sunrise::GetState(void) const
 {
-    return m_State;
+    return m_State.state;
 }
 
 void Sunrise::SetState(const state_t& value)
 {
-    m_State = value;
+    m_State.state = value;
 }
 
 uint16_t Sunrise::GetABCTime(void) const
 {
-    return swapEndian(m_State.abc.time);
+    return swapEndian(m_State.state.abc.time);
 }
 
 void Sunrise::SetABCTime(uint16_t value)
 {
-    m_State.abc.time = swapEndian(value);
+    m_State.state.abc.time = swapEndian(value);
 }
 
 bool Sunrise::GetCalibrationStatus(uint8_t& result) const

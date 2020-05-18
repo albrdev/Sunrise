@@ -42,8 +42,6 @@ typedef struct
     {
         uint16_t par[7];
     } filter;
-
-    int16_t bap;
 } state_t;
 
 typedef enum : uint16_t
@@ -109,18 +107,25 @@ private:
         0U                  // CO2, (Unfiltered)
     };
 
-    state_t m_State =
+    struct
     {
-        // ABC
+        state_t state;
+        int16_t bap;
+    } m_State =
+    {
+        // State
         {
-            0U,                             // Time
-            { 0U, 0U, 0U, 0U }              // Par0-3
+            // ABC
+            {
+                0U,                             // Time
+                { 0U, 0U, 0U, 0U }              // Par0-3
+            },
+            // Filter
+            {
+                { 0U, 0U, 0U, 0U, 0U, 0U, 0U }  // Par0-6
+            }
         },
-        // Filter
-        {
-            { 0U, 0U, 0U, 0U, 0U, 0U, 0U }  // Par0-6
-        },
-        0U                                  // Barometric air pressure
+        0U                                      // Barometric air pressure
     };
 
 #ifndef __REGION__REGISTER_CONTROL__
