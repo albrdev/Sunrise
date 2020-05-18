@@ -283,6 +283,8 @@ bool Sunrise::StartSingleMeasurement(void) const
         return false;
     }
 
+    size_t size = (mc & (1 << metercontrolindex_t::MCI_PRESSURE_COMPENSATION)) == 0U ? sizeof(m_State) : sizeof(m_State.state);
+
     uint8_t cmd[] = { REGM_START_SINGLE_MEASUREMENT, 0x01 };
     if(!BeginCommand())
     {
@@ -294,7 +296,6 @@ bool Sunrise::StartSingleMeasurement(void) const
         return false;
     }
 
-    size_t size = (mc & (1 << metercontrolindex_t::MCI_PRESSURE_COMPENSATION)) == 0U ? sizeof(m_State) : sizeof(m_State.state);
     return I2CWrite(m_Address, &m_State, size, true, DELAY_SRAM * 12UL) == wirestatus_t::WS_ACK;
 }
 
@@ -302,20 +303,17 @@ bool Sunrise::ReadMeasurement(bool saveState)
 {
     if(!BeginCommand())
     {
-        Serial.println("bla1");
         return false;
     }
 
     const uint8_t reg = REG_ERRORSTATUS_MSB;
     if(I2CWrite(m_Address, &reg, sizeof(reg)) != wirestatus_t::WS_ACK)
     {
-        Serial.println("bla2");
         return false;
     }
 
     if(I2CRead(m_Address, &m_Measurement, sizeof(m_Measurement)) != sizeof(m_Measurement))
     {
-        Serial.println("bla3");
         return false;
     }
 
@@ -335,7 +333,6 @@ bool Sunrise::ReadMeasurement(void)
     measurementmode_t mode;
     if(!GetMeasurementModeEE(mode))
     {
-        Serial.println("bla0");
         return false;
     }
 
