@@ -296,7 +296,7 @@ bool Sunrise::StartSingleMeasurement(void) const
         return false;
     }
 
-    return I2CWrite(m_Address, &m_State, size, true, DELAY_SRAM * 12UL) == wirestatus_t::WS_ACK;
+    return I2CWrite(m_Address, &m_State, size, true, DELAY_SRAM * 13UL) == wirestatus_t::WS_ACK;
 }
 
 bool Sunrise::ReadMeasurement(bool saveState)
