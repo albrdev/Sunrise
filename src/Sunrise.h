@@ -178,16 +178,16 @@ public:
     operator bool(void) const;
 
 #ifndef __REGION__MEASUREMENT_VALUES__
+    /*! Gets the full error status field.
+        \return The error status.
+    */
+    uint16_t GetErrorStatusRaw(void) const;
+
     /*! Checks if a specific error has been set.
         \param[in]  value   The code for the specific error to check.
         \return             True if the specified error has occured, false otherwise.
     */
     bool GetErrorStatus(errorstatus_t value) const;
-
-    /*! Gets the full error status field.
-        \return The error status.
-    */
-    uint16_t GetErrorStatusRaw(void) const;
 
     /*! Clears the sensor's error status.
         \return True on success, false on failure.
@@ -200,15 +200,15 @@ public:
     uint16_t GetCO2(void) const;
 
     /*! Gets the temperature value previously retrieved by ReadMeasurement().
-        \return The temperature in centigrades (Celsius).
-    */
-    float GetTemperature(void) const;
-
-    /*! Gets the temperature value previously retrieved by ReadMeasurement().
         This value is the actual temperature * 100.
         \return The raw temperature in centigrades (Celsius).
     */
     int16_t GetTemperatureRaw(void) const;
+
+    /*! Gets the temperature value previously retrieved by ReadMeasurement().
+        \return The temperature in centigrades (Celsius).
+    */
+    float GetTemperature(void) const;
 
     /*! Gets the measurement count previously retrieved by ReadMeasurement().
         This value gets reset when the sensor is powered down.
@@ -240,18 +240,6 @@ public:
 #endif  // __REGION__REGISTER_VALUES__
 
 #ifndef __REGION__BAROMETRIC_PRESSURE__
-    /*! Gets the barometric air pressure cached in the internal state.
-        See SetStateBarometricAirPressure().
-        \return The barometric air pressure in kPa.
-    */
-    float GetStateBarometricAirPressure(void) const;
-
-    /*! Sets the barometric air pressure cached in the internal state.
-        This value is automatically written (along with state) to the sensor at the next call to StartSingleMeasurement(), when in single measurement mode.
-        \param[in]  value   The barometric air pressure in kPa.
-    */
-    void SetStateBarometricAirPressure(float value);
-
     /*! Gets the raw barometric air pressure cached in the internal state.
         See SetStateBarometricAirPressureRaw().
         \return The barometric air pressure in hPa.
@@ -264,19 +252,17 @@ public:
     */
     void SetStateBarometricAirPressureRaw(int16_t value);
 
-    /*! Gets the barometric air pressure directly from the sensor's register.
-        See SetBarometricAirPressure().
-        \param[out] result  The barometric air pressure in kPa.
-        \return             True on success, false on failure.
+    /*! Gets the barometric air pressure cached in the internal state.
+        See SetStateBarometricAirPressure().
+        \return The barometric air pressure in kPa.
     */
-    bool GetBarometricAirPressure(float& result) const;
+    float GetStateBarometricAirPressure(void) const;
 
-    /*! Sets the barometric air pressure directly to the sensor's register.
-        Can be used when the sensor is in continuous measurement mode, since the internal state is then not used.
+    /*! Sets the barometric air pressure cached in the internal state.
+        This value is automatically written (along with state) to the sensor at the next call to StartSingleMeasurement(), when in single measurement mode.
         \param[in]  value   The barometric air pressure in kPa.
-        \return             True on success, false on failure.
     */
-    bool SetBarometricAirPressure(float value) const;
+    void SetStateBarometricAirPressure(float value);
 
     /*! Gets the raw barometric air pressure directly from the sensor's register.
         See SetBarometricAirPressureRaw().
@@ -291,6 +277,20 @@ public:
         \return             True on success, false on failure.
     */
     bool SetBarometricAirPressureRaw(int16_t value) const;
+
+    /*! Gets the barometric air pressure directly from the sensor's register.
+        See SetBarometricAirPressure().
+        \param[out] result  The barometric air pressure in kPa.
+        \return             True on success, false on failure.
+    */
+    bool GetBarometricAirPressure(float& result) const;
+
+    /*! Sets the barometric air pressure directly to the sensor's register.
+        Can be used when the sensor is in continuous measurement mode, since the internal state is then not used.
+        \param[in]  value   The barometric air pressure in kPa.
+        \return             True on success, false on failure.
+    */
+    bool SetBarometricAirPressure(float value) const;
 #endif  // __REGION__BAROMETRIC_PRESSURE__
 
 #ifndef __REGION__MEASUREMENT_CONTROL__

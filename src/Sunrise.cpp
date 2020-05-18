@@ -139,14 +139,14 @@ Sunrise::operator bool(void) const
     return m_Measurement.errorstatus == 0U;
 }
 
-bool Sunrise::GetErrorStatus(errorstatus_t value) const
-{
-    return (m_Measurement.errorstatus & (1 << value)) != 0;
-}
-
 uint16_t Sunrise::GetErrorStatusRaw(void) const
 {
     return m_Measurement.errorstatus;
+}
+
+bool Sunrise::GetErrorStatus(errorstatus_t value) const
+{
+    return (m_Measurement.errorstatus & (1 << value)) != 0;
 }
 
 bool Sunrise::ClearErrorStatus(void)
@@ -165,14 +165,14 @@ uint16_t Sunrise::GetCO2(void) const
     return m_Measurement.co2;
 }
 
-float Sunrise::GetTemperature(void) const
-{
-    return (float)m_Measurement.temp / 100.0f;
-}
-
 int16_t Sunrise::GetTemperatureRaw(void) const
 {
     return m_Measurement.temp;
+}
+
+float Sunrise::GetTemperature(void) const
+{
+    return (float)m_Measurement.temp / 100.0f;
 }
 
 uint8_t Sunrise::GetMeasurementCount(void) const
@@ -200,16 +200,6 @@ uint16_t Sunrise::GetCO2_U(void) const
     return m_Measurement.co2_u;
 }
 
-float Sunrise::GetStateBarometricAirPressure(void) const
-{
-    return (float)GetStateBarometricAirPressureRaw() / KPA_IN_HPA;
-}
-
-void Sunrise::SetStateBarometricAirPressure(float value)
-{
-    SetStateBarometricAirPressureRaw((int16_t)(value * KPA_IN_HPA));
-}
-
 int16_t Sunrise::GetStateBarometricAirPressureRaw(void) const
 {
     return swapEndian(m_State.bap);
@@ -225,21 +215,14 @@ void Sunrise::SetStateBarometricAirPressureRaw(int16_t value)
     m_State.bap = swapEndian(value);
 }
 
-bool Sunrise::GetBarometricAirPressure(float& result) const
+float Sunrise::GetStateBarometricAirPressure(void) const
 {
-    int16_t tmpResult;
-    if(!GetBarometricAirPressureRaw(tmpResult))
-    {
-        return false;
-    }
-
-    result = (float)tmpResult / KPA_IN_HPA;
-    return true;
+    return (float)GetStateBarometricAirPressureRaw() / KPA_IN_HPA;
 }
 
-bool Sunrise::SetBarometricAirPressure(float value) const
+void Sunrise::SetStateBarometricAirPressure(float value)
 {
-    return SetBarometricAirPressureRaw((int16_t)(value * KPA_IN_HPA));
+    SetStateBarometricAirPressureRaw((int16_t)(value * KPA_IN_HPA));
 }
 
 bool Sunrise::GetBarometricAirPressureRaw(int16_t& result) const
@@ -262,6 +245,23 @@ bool Sunrise::SetBarometricAirPressureRaw(int16_t value) const
     }
 
     return WriteRegister2(REG_BAROMETRIC_AIR_PRESSURE_VALUE_MSB, (uint16_t)value, DELAY_SRAM);
+}
+
+bool Sunrise::GetBarometricAirPressure(float& result) const
+{
+    int16_t tmpResult;
+    if(!GetBarometricAirPressureRaw(tmpResult))
+    {
+        return false;
+    }
+
+    result = (float)tmpResult / KPA_IN_HPA;
+    return true;
+}
+
+bool Sunrise::SetBarometricAirPressure(float value) const
+{
+    return SetBarometricAirPressureRaw((int16_t)(value * KPA_IN_HPA));
 }
 
 bool Sunrise::StartSingleMeasurement(void) const
@@ -531,6 +531,11 @@ bool Sunrise::GetMeterControlRawEE(uint8_t& result) const
     return ReadRegister1(REG_METER_CONTROL, result);
 }
 
+bool Sunrise::SetMeterControlRawEE(uint8_t value) const
+{
+    return WriteRegister1(REG_METER_CONTROL, value, DELAY_EEPROM);
+}
+
 bool Sunrise::GetMeterControlEE(metercontrol_t& result) const
 {
     uint8_t tmpResult;
@@ -546,11 +551,6 @@ bool Sunrise::GetMeterControlEE(metercontrol_t& result) const
     }
 
     return status;
-}
-
-bool Sunrise::SetMeterControlRawEE(uint8_t value) const
-{
-    return WriteRegister1(REG_METER_CONTROL, value, DELAY_EEPROM);
 }
 
 bool Sunrise::SetMeterControlEE(const metercontrol_t& value) const
