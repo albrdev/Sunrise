@@ -15,6 +15,28 @@
 #define SUNRISE_DEFAULT_ADDRESS 0x68
 #define SUNRISE_INVALID_PIN     0xFF
 
+/*! Contains measurement data read from the sensor.
+    - Error status\n
+    The error status.
+    - Reserved 1\n
+    Reserved.
+    - CO2\n
+    CO2 value in ppm (filtered, pressure compensated).
+    - Temp\n
+    Raw temperature in centigrades (Celsius).
+    - Reserved 2\n
+    Reserved.
+    - Count\n
+    Measurement count.
+    - Cycle time\n
+    Measurement cycle time.
+    - CO2_UP\n
+    CO2 value in ppm (unfiltered, pressure compensated).
+    - CO2_F\n
+    CO2 value in ppm (filtered).
+    - CO2_U\n
+    CO2 value in ppm (unfiltered).
+*/
 typedef struct
 {
     // Structure padding shouldn't occur here, no packing necessary.
@@ -30,6 +52,18 @@ typedef struct
     uint16_t co2_u;
 } measurement_t;
 
+/*! Contains calibration and filtering state.
+    Data stored in this structure will keep the same endianess as the sensor (big-endian).
+    - ABC
+      - Time\n
+      The time, in hours, since the last ABC calibration.
+      - Par 0-4\n
+      Internal state values for ABC calibration.
+
+    - Filter
+      - Par 0-6\n
+      Internal state values for IIR filtering.
+*/
 typedef struct
 {
     struct
@@ -44,6 +78,39 @@ typedef struct
     } filter;
 } state_t;
 
+/*! Contains error status codes (bit index).
+    - ES_FATAL\n
+    Fatal error.\n
+    Indicates that initialization of analog front end failed.
+    - ES_I2C\n
+    I2C error.\n
+    Attempt to read or write to not exiting addresses/registers detected.
+    - ES_ALGORITHM\n
+    Algorithm error.\n
+    Corrupt parameters detected.
+    - ES_CALIBRATION\n
+    Calibration error.\n
+    Indicates that calibration has failed (ABC, zero, background or target calibration).
+    - ES_SELF_DIAGNOSTICS\n
+    Self-diagnostics error.\n
+    Indicates internal interface failure.
+    - ES_OUT_OF_RANGE\n
+    Out of range.\n
+    Indicates that the measured concentration is outside the sensor's measurement range.
+    - ES_MEMORY\n
+    Memory error.\n
+    Error during memory operations.
+    - ES_NOT_COMPLETED\n
+    No measurement completed.\n
+    Bit set at startup, cleared after first measurement.
+
+    - ES_LOW_INTERNAL_VOLTAGE\n
+    Low internal regulated voltage.\n
+    Flag is set if sensor's regulated voltage is too low, this means supply voltage is lower then 2.8V.
+    - ES_MEASUREMENT_TIMEOUT\n
+    Measurement timeout.\n
+    Flag is set if sensor is unable to complete the measurement in time.
+*/
 typedef enum : uint16_t
 {
     ES_FATAL                = 0,
@@ -59,6 +126,21 @@ typedef enum : uint16_t
     ES_MEASUREMENT_TIMEOUT  = 9
 } errorstatus_t;
 
+/*! Contains meter control settings.
+    True means the specific setting is enabled, otherwise not.
+    - nRDY\n
+    nRDY pin interrupts.\n
+    Used in single measurement mode.
+    - ABC\n
+    Automatic background calibration (ABC).\n
+    Required state and ABC time to be handled if device is powered down (single measurement mode).
+    - Static IIR\n
+    Static IIR filtering.
+    - Static IIR\n
+    Dynamic IIR filtering.
+    - Pressure compensation\n
+    Requires barometric air pressure value to be set.
+*/
 typedef struct
 {
     bool nrdy;
@@ -68,12 +150,36 @@ typedef struct
     bool pressure_compensation;
 } metercontrol_t;
 
+
+/*! Contains measurement mode types.
+    - MM_CONTINUOUS\n
+    Continuous measurement mode.
+    - MM_SINGLE\n
+    Single measurement mode.
+*/
 typedef enum : uint8_t
 {
     MM_CONTINUOUS   = 0x00,
     MM_SINGLE       = 0x01
 } measurementmode_t;
 
+/*! Contains calibration options.
+    - C_FACTORY_RESET\n
+    Restore factory calibration.\n
+    Restores calibration parameters to factory calibration values.
+    - C_ABC_FORCED\n
+    Forced ABC calibration.\n
+    Sensor will perform an ABC calibration after receiving this command if sensor has valid ABC data.
+    - C_TARGET\n
+    Target calibration.\n
+    Requires calibration target to be set.
+    - C_ABC\n
+    Automatic background calibration.\n
+    Requires ABC target to be set.
+    - C_ZERO\n
+    Zero calibration.\n
+    Calibration using 0 ppm CO2 as calibration target.
+*/
 typedef enum : uint16_t
 {
     C_FACTORY_RESET = 0x7C02,
@@ -83,6 +189,8 @@ typedef enum : uint16_t
     C_ZERO          = 0x7C07
 } calibration_t;
 
+/*! Main class for the Senseair Sunrise CO2 sensor.
+*/
 class Sunrise
 {
 private:
