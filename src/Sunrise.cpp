@@ -647,7 +647,6 @@ bool Sunrise::Restart(void) const
         return false;
     }
 
-    //HardRestart();
     delay(DELAY_WAKEUP);
     return true;
 }
