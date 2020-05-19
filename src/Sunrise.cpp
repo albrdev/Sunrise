@@ -332,6 +332,18 @@ void Sunrise::SetState(const state_t& value)
     m_State.state = value;
 }
 
+void Sunrise::SetState(const state_t& value, int16_t bap)
+{
+    m_State.state = value;
+    SetStateBarometricAirPressureRaw(bap);
+}
+
+void Sunrise::SetState(const state_t& value, float bap)
+{
+    m_State.state = value;
+    SetStateBarometricAirPressure(bap);
+}
+
 uint16_t Sunrise::GetABCTime(void) const
 {
     return swapEndian(m_State.state.abc.time);

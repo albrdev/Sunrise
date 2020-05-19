@@ -304,6 +304,22 @@ public:
     */
     void SetState(const state_t& value);
 
+    /*! Sets the cached filtering and calibration state.
+        The state is automatically written to the sensor at the next call to StartSingleMeasurement(), when in single measurement mode.
+        Optionally sets the raw barometric air pressure.
+        \param[in]  value   The state.
+        \param[in]  bap     The raw barometric air pressure.
+    */
+    void SetState(const state_t& value, int16_t bap);
+
+    /*! Sets the cached filtering and calibration state.
+        The state is automatically written to the sensor at the next call to StartSingleMeasurement(), when in single measurement mode.
+        Optionally sets the barometric air pressure.
+        \param[in]  value   The state.
+        \param[in]  bap     The barometric air pressure.
+    */
+    void SetState(const state_t& value, float bap);
+
     /*! Gets the cached ABC time, i.e. the time passed since the last ABC calibration, in hours.
         \return             The time since the last ABC calibration.
     */
