@@ -225,45 +225,6 @@ void Sunrise::SetStateBarometricAirPressure(float value)
     SetStateBarometricAirPressureRaw((int16_t)(value * KPA_IN_HPA));
 }
 
-bool Sunrise::GetBarometricAirPressureRaw(int16_t& result) const
-{
-    uint16_t tmpResult;
-    if(!ReadRegister2(REG_BAROMETRIC_AIR_PRESSURE_VALUE_MSB, tmpResult))
-    {
-        return false;
-    }
-
-    result = (int16_t)tmpResult;
-    return true;
-}
-
-bool Sunrise::SetBarometricAirPressureRaw(int16_t value) const
-{
-    if(value < BAROMETRIC_AIR_PRESSURE_MIN || value > BAROMETRIC_AIR_PRESSURE_MAX)
-    {
-        return false;
-    }
-
-    return WriteRegister2(REG_BAROMETRIC_AIR_PRESSURE_VALUE_MSB, (uint16_t)value, DELAY_SRAM);
-}
-
-bool Sunrise::GetBarometricAirPressure(float& result) const
-{
-    int16_t tmpResult;
-    if(!GetBarometricAirPressureRaw(tmpResult))
-    {
-        return false;
-    }
-
-    result = (float)tmpResult / KPA_IN_HPA;
-    return true;
-}
-
-bool Sunrise::SetBarometricAirPressure(float value) const
-{
-    return SetBarometricAirPressureRaw((int16_t)(value * KPA_IN_HPA));
-}
-
 bool Sunrise::StartSingleMeasurement(void) const
 {
     measurementmode_t mode;

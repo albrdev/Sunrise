@@ -263,34 +263,6 @@ public:
         \param[in]  value   The barometric air pressure in kPa.
     */
     void SetStateBarometricAirPressure(float value);
-
-    /*! Gets the raw barometric air pressure directly from the sensor's register.
-        See SetBarometricAirPressureRaw().
-        \param[out] result  The barometric air pressure in hPa.
-        \return             True on success, false on failure.
-    */
-    bool GetBarometricAirPressureRaw(int16_t& result) const;
-
-    /*! Sets the raw barometric air pressure directly to the sensor's register.
-        Can be used when the sensor is in continuous measurement mode, since the internal state is then not used.
-        \param[in]  value   The barometric air pressure in hPa.
-        \return             True on success, false on failure.
-    */
-    bool SetBarometricAirPressureRaw(int16_t value) const;
-
-    /*! Gets the barometric air pressure directly from the sensor's register.
-        See SetBarometricAirPressure().
-        \param[out] result  The barometric air pressure in kPa.
-        \return             True on success, false on failure.
-    */
-    bool GetBarometricAirPressure(float& result) const;
-
-    /*! Sets the barometric air pressure directly to the sensor's register.
-        Can be used when the sensor is in continuous measurement mode, since the internal state is then not used.
-        \param[in]  value   The barometric air pressure in kPa.
-        \return             True on success, false on failure.
-    */
-    bool SetBarometricAirPressure(float value) const;
 #endif  // __REGION__BAROMETRIC_PRESSURE__
 
 #ifndef __REGION__MEASUREMENT_CONTROL__
