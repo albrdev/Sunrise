@@ -53,7 +53,11 @@ static size_t I2CRead(int addr, void* result, size_t size, bool sendStop = true,
     Wire.requestFrom(addr, size, sendStop);
     timeout += millis();
     size_t avail;
-    while((avail = (size_t)Wire.available()) < size && (long)(millis() - timeout) < 0L);
+    while((avail = (size_t)Wire.available()) < size && (long)(millis() - timeout) < 0L)
+    {
+        yield();
+    }
+
     return avail > 0U ? Wire.readBytes((uint8_t*)result, avail) : 0U;
 }
 

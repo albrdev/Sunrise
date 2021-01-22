@@ -12,7 +12,18 @@ unsigned long int nextMeasurement;
 
 void delayUntil(unsigned long int time)
 {
-    while((long)(millis() - time) < 0L);
+    while((long)(millis() - time) < 0L)
+    {
+        yield();
+    }
+}
+
+void errorState(void)
+{
+    while(true)
+    {
+        yield();
+    }
 }
 
 void switchMode(measurementmode_t mode)
@@ -23,7 +34,7 @@ void switchMode(measurementmode_t mode)
         if(!sunrise.GetMeasurementModeEE(measurementMode))
         {
             Serial.println("*** ERROR: Could not get measurement mode");
-            while(true);
+            errorState();
         }
 
         if(measurementMode == mode)
@@ -35,13 +46,13 @@ void switchMode(measurementmode_t mode)
         if(!sunrise.SetMeasurementModeEE(mode))
         {
             Serial.println("*** ERROR: Could not set measurement mode");
-            while(true);
+            errorState();
         }
 
         if(!sunrise.HardRestart())
         {
             Serial.println("*** ERROR: Failed to restart the device");
-            while(true);
+            errorState();
         }
     }
 }
@@ -72,7 +83,7 @@ void setup(void)
     if(!sunrise.GetMeasurementPeriodEE(mp))
     {
         Serial.println("*** ERROR: Could not get measurement period");
-        while(true);
+        errorState();
     }
     Serial.print("Measurement period:  "); Serial.println(mp);
     measurementInterval = mp * 1000UL;
@@ -81,7 +92,7 @@ void setup(void)
     if(!sunrise.GetNumberOfSamplesEE(nos))
     {
         Serial.println("*** ERROR: Could not get number of samples");
-        while(true);
+        errorState();
     }
     Serial.print("Number of samples:   "); Serial.println(nos);
     measurementDuration = SAMPLE_DURATION_MAX * nos;

@@ -6,6 +6,14 @@
 
 Sunrise sunrise;
 
+void errorState(void)
+{
+    while(true)
+    {
+        yield();
+    }
+}
+
 void printStaticInfo(void)
 {
     uint16_t firmwareRevisionRaw;
@@ -18,7 +26,7 @@ void printStaticInfo(void)
     if(!sunrise.GetFirmwareRevisionRaw(firmwareRevisionRaw))
     {
         Serial.println("Error: Could not get firmware revision raw");
-        while(true);
+        errorState();
     }
     Serial.print("Firmware revision raw:  "); Serial.println(firmwareRevisionRaw);
 
@@ -26,7 +34,7 @@ void printStaticInfo(void)
     if(!sunrise.GetFirmwareRevision(firmwareRevisionMain, firmwareRevisionSub))
     {
         Serial.println("Error: Could not get raw firmware revision");
-        while(true);
+        errorState();
     }
     Serial.print("Firmware revision:      "); Serial.print(firmwareRevisionMain); Serial.print("."); Serial.println(firmwareRevisionSub);
 
@@ -34,7 +42,7 @@ void printStaticInfo(void)
     if(!sunrise.GetSensorID(sensorID))
     {
         Serial.println("Error: Could not get sensor ID");
-        while(true);
+        errorState();
     }
     Serial.print("Sensor ID:              "); Serial.println(sensorID);
     Serial.println();
@@ -50,7 +58,7 @@ void printMeterControl(void)
     if(!sunrise.GetMeterControlRawEE(meterControlRaw))
     {
         Serial.println("Error: Could not get meter control raw");
-        while(true);
+        errorState();
     }
     Serial.print("Raw:                    "); Serial.println(meterControlRaw, BIN);
 
@@ -58,7 +66,7 @@ void printMeterControl(void)
     if(!sunrise.GetMeterControlEE(meterControl))
     {
         Serial.println("Error: Could not get meter control");
-        while(true);
+        errorState();
     }
 
     Serial.print("NRDY:                   "); Serial.println(meterControl.nrdy ? "ENABLED" : "DISABLED");
@@ -83,7 +91,7 @@ void printMeasurementSettings(void)
     if(!sunrise.GetMeasurementModeEE(measurementMode))
     {
         Serial.println("Error: Could not get measurement mode");
-        while(true);
+        errorState();
     }
     Serial.print("Measurement mode:             "); Serial.println(measurementMode == measurementmode_t::MM_CONTINUOUS ? "Continuous" : "Single");
 
@@ -91,7 +99,7 @@ void printMeasurementSettings(void)
     if(!sunrise.GetMeasurementPeriodEE(measurementPeriod))
     {
         Serial.println("*** ERROR: Could not get measurement period");
-        while(true);
+        errorState();
     }
     Serial.print("Measurement period:           "); Serial.print(measurementPeriod); Serial.println("s");
 
@@ -99,7 +107,7 @@ void printMeasurementSettings(void)
     if(!sunrise.GetNumberOfSamplesEE(numberOfSamples))
     {
         Serial.println("*** ERROR: Could not get number of samples");
-        while(true);
+        errorState();
     }
     Serial.print("Number of samples:            "); Serial.println(numberOfSamples);
 
@@ -107,7 +115,7 @@ void printMeasurementSettings(void)
     if(!sunrise.GetABCPeriodEE(abcPeriod))
     {
         Serial.println("Error: Could not get ABC period");
-        while(true);
+        errorState();
     }
     Serial.print("ABC period:                   "); Serial.print(abcPeriod); Serial.println("h");
 
@@ -115,7 +123,7 @@ void printMeasurementSettings(void)
     if(!sunrise.GetABCTargetEE(abcTarget))
     {
         Serial.println("Error: Could not get ABC target");
-        while(true);
+        errorState();
     }
     Serial.print("ABC target:                   "); Serial.print(abcTarget); Serial.println("ppm");
 
@@ -123,7 +131,7 @@ void printMeasurementSettings(void)
     if(!sunrise.GetStaticIIRFilterParameterEE(staticIIRFilterParameter))
     {
         Serial.println("Error: Could not get static IIR fitler parameter");
-        while(true);
+        errorState();
     }
     Serial.print("Static IIR fitler parameter:  "); Serial.println(staticIIRFilterParameter);
     Serial.println();
